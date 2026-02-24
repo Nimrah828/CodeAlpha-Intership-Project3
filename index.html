@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse Music Player</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-atmosphere"></div>
+  <div class="grid-lines"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- Main Container -->
+  <div class="relative z-10 min-h-screen flex flex-col lg:flex-row">
+    <!-- Player Section -->
+    <main class="flex-1 flex flex-col items-center justify-center p-6 lg:p-12">
+      <div class="w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8 animate-in">
+          <h1 class="font-display text-2xl font-bold tracking-tight">PULSE</h1>
+          <p class="text-sm text-[var(--muted)] mt-1">Now Playing</p>
+        </div>
+
+        <!-- Album Art -->
+        <div class="album-art-container mb-8 animate-in delay-1">
+          <div class="album-glow" id="albumGlow"></div>
+          <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop" 
+               alt="Album cover" 
+               class="album-art" 
+               id="albumArt">
+        </div>
+
+        <!-- Visualizer -->
+        <div class="visualizer mb-6 animate-in delay-2" id="visualizer"></div>
+
+        <!-- Track Info -->
+        <div class="text-center mb-6 animate-in delay-2">
+          <h2 class="font-display text-2xl font-bold mb-1" id="trackTitle">Neon Dreams</h2>
+          <p class="text-[var(--muted)]" id="artistName">Synthwave Collective</p>
+        </div>
+
+        <!-- Progress -->
+        <div class="mb-6 animate-in delay-3">
+          <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <div class="flex justify-between mt-2 text-sm text-[var(--muted)]">
+            <span id="currentTime">0:00</span>
+            <span id="duration">0:00</span>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex items-center justify-center gap-4 mb-8 animate-in delay-3">
+          <button class="control-btn secondary" id="shuffleBtn" aria-label="Shuffle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 3 21 3 21 8"></polyline>
+              <line x1="4" y1="20" x2="21" y2="3"></line>
+              <polyline points="21 16 21 21 16 21"></polyline>
+              <line x1="15" y1="15" x2="21" y2="21"></line>
+              <line x1="4" y1="4" x2="9" y2="9"></line>
+            </svg>
+          </button>
+          <button class="control-btn secondary" id="prevBtn" aria-label="Previous track">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+            </svg>
+          </button>
+          <button class="control-btn primary" id="playBtn" aria-label="Play">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" id="playIcon">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" id="pauseIcon" style="display: none;">
+              <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
+            </svg>
+          </button>
+          <button class="control-btn secondary" id="nextBtn" aria-label="Next track">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+            </svg>
+          </button>
+          <button class="control-btn secondary" id="repeatBtn" aria-label="Repeat">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="17 1 21 5 17 9"></polyline>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+              <polyline points="7 23 3 19 7 15"></polyline>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Volume -->
+        <div class="flex items-center justify-center gap-3 animate-in delay-4">
+          <button class="control-btn" id="muteBtn" aria-label="Mute">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="volumeIcon">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" id="volumeWave1"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" id="volumeWave2"></path>
+            </svg>
+          </button>
+          <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider" aria-label="Volume">
+          <span class="text-sm text-[var(--muted)] w-10" id="volumeValue">70%</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Playlist Section -->
+    <aside class="w-full lg:w-96 bg-[var(--bg-elevated)] border-t lg:border-t-0 lg:border-l border-[var(--border)] p-6 lg:p-8">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-display text-lg font-bold">Playlist</h3>
+        <span class="text-sm text-[var(--muted)]" id="trackCount">8 tracks</span>
+      </div>
+      
+      <div class="space-y-2 max-h-[60vh] lg:max-h-none lg:overflow-y-auto" id="playlist"></div>
+    </aside>
+  </div>
+
+  <!-- Hidden Audio Element -->
+  <audio id="audioPlayer"></audio>
+
+  <script src="script.js"></script>
+   
+</body>
+</html>
